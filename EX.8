@@ -1,0 +1,61 @@
+mysql> use sse;
+Database changed
+mysql> show tables;
++---------------+
+| Tables_in_sse |
++---------------+
+| empdepartment |
+| employee      |
+| faculty       |
+| student       |
++---------------+
+4 rows in set (0.00 sec)
+
+mysql> select*from student;
++----------+------+------------+-------+-------+--------+
+| name     | dept | adress     | marks | grade | std_id |
++----------+------+------------+-------+-------+--------+
+| supriya  | BI   | kadapa     |    99 | A     |      1 |
+| radha    | CSE  | ananthapur |    98 | A     |      1 |
+| rushitha | CSE  | thirupathi |    88 | B     |      2 |
+| poojitha | EEE  | nellore    |    78 | C     |      3 |
++----------+------+------------+-------+-------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select name,dept from student where name in(select name from student where grade="A");
++---------+------+
+| name    | dept |
++---------+------+
+| supriya | BI   |
+| radha   | CSE  |
++---------+------+
+2 rows in set (0.00 sec)
+
+mysql> create table student1(id int(12),name varchar(25));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> insert into student1(id,name)
+    -> select std_id,name
+    -> from student where dept="CSE";
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select*from student1;
++------+----------+
+| id   | name     |
++------+----------+
+|    1 | radha    |
+|    2 | rushitha |
++------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select std_id,(select name from student1 where std_id=1)as name,dept,adress,marks,grade,std_id from student where std_id-1;
++--------+------+------+------------+-------+-------+--------+
+| std_id | name | dept | adress     | marks | grade | std_id |
++--------+------+------+------------+-------+-------+--------+
+|      2 | NULL | CSE  | thirupathi |    88 | B     |      2 |
+|      3 | NULL | EEE  | nellore    |    78 | C     |      3 |
++--------+------+------+------------+-------+-------+--------+
+2 rows in set (0.00 sec)
+
+mysql>
